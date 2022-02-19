@@ -1,0 +1,23 @@
+{
+  "name": "kaijin-light-serve",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaijin1/kaijin-light-serve.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaijin1/kaijin-light-serve/issues"
+  },
+  "homepage": "https://github.com/kaijin1/kaijin-light-serve#readme",
+  "dependencies": {
+    "koa": "^2.13.4",
+    "nodemon": "^2.0.15"
+  }
+}
