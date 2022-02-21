@@ -1,6 +1,7 @@
 const Topic = require('../model/topic')
-const User = require('../controller/user')
-const Question = require('../controller/question')
+const User = require('../model/user')
+const Question = require('../model/question')
+const fieldHandle = require('../utils/fields')
 
 class topicController{
   async find(ctx){
@@ -27,7 +28,7 @@ class topicController{
   }
 
   async create(ctx){
-    ctx.vertifyParams({
+    ctx.verifyParams({
       name:{type:'string',required:true},
       avatar_url:{type:'string',required:false},
       introduction:{type:'string',required:false}
@@ -37,20 +38,19 @@ class topicController{
   }
 
   async update(ctx){
-    ctx.vertifyParams({
+    console.log(ctx.params.id,ctx.request.body);
+    ctx.verifyParams({
       name:{type:'string',required:false},
       avatar_url:{type:'string',required:false},
       introduction:{type:'string',required:false}
     })
-    const topic = Topic.findByIdAndUpdate(ctx.params.id,ctx.request.body)
+    const topic = await Topic.findByIdAndUpdate(ctx.params.id,ctx.request.body)
     ctx.body = topic
   }
 
   //获取粉丝列表
   async listFollowers(ctx){
     const users = await User.find({followingTopics:ctx.params.id})
-                            .select('+followingTopics')
-                            .populate('followingTopics')
     ctx.body = users
   }
 

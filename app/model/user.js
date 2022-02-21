@@ -8,7 +8,7 @@ const userSchema = new Schema({
   nickname:{type:String,required:true},
   password:{type:String,required:true,select:false},
   avatar_url:{type:String},
-  gender:{type:String,enum:['male','female'],default:'male',required},
+  gender:{type:String,enum:['male','female'],default:'male',required:true},
   headline:{type:String},
   locations:{type:[{type:Schema.Types.ObjectId,ref:'Topic'}],select:false},
   employments:{

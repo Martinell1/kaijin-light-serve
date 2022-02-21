@@ -1,6 +1,6 @@
 const Comment = require('../model/comment')
-const User = require('../controller/user')
-const user = require('../model/user')
+const User = require('../model/user')
+const fieldHandle = require('../utils/fields')
 
 class commentController{
   async find(ctx){
@@ -35,7 +35,7 @@ class commentController{
   }
 
   async create(ctx){
-    ctx.vertifyParams({
+    ctx.verifyParams({
       content:{type:'string',required:true},
       rootCommentId:{type:'string',required:false},
       replyTo:{type:'string',required:false},
@@ -51,17 +51,17 @@ class commentController{
   }
 
   async update(ctx){
-    ctx.vertifyParams({
+    ctx.verifyParams({
       content:{type:'string',required:true}
     })
     const {content} = ctx.request.body
-    await ctx.state.comment.update(content)
+    await ctx.state.comment.update({content})
     ctx.body = ctx.state.comment
   }
 
   async checkCommenter(ctx,next){
     const {comment} = ctx.state;
-    if(comment.commentator.toString() !== user.state.user._id){
+    if(comment.commentator.toString() !== ctx.state.user._id){
       ctx.throw(403,'没有权限')
     }
     await next()

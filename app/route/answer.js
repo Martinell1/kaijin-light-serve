@@ -9,13 +9,13 @@ const {checkAnswerExist,checkAnswerer,
 
 const auth = jwt({secret:SECRET})
 
-router.get('/',find)
+router.get('/',find)  //回答列表
 
-router.post('/',create)
+router.post('/',auth,create) //回答问题
 
-router.patch('/:id',auth,checkAnswerExist,checkAnswerer,update)
+router.get('/:id',checkAnswerExist,findById) //获取单个问题
 
-router.get('/:id',checkAnswerExist,findById)
+router.patch('/:id',auth,checkAnswerExist,checkAnswerer,update) //更新回答
 
 router.delete('/:id',auth,checkAnswerExist,checkAnswerer,del)
 

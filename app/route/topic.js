@@ -9,17 +9,17 @@ const {checkTopicExist,
 
 const auth = jwt({secret:SECRET})
 
-router.get('/',find)
+router.get('/',find)  //话题列表
 
-router.post('/',create)
+router.post('/',create) //新建话题
 
-router.patch('/:id',auth,checkTopicExist,update)
+router.patch('/:id',auth,checkTopicExist,update) //更新话题
 
-router.get('/:id',checkTopicExist,findById)
+router.get('/:id',checkTopicExist,findById) //获取单个话题
 
-router.get('/:id/followers',checkTopicExist,listFollowers)
+router.get('/:id/followers',checkTopicExist,listFollowers) //获取粉丝列表
 
-router.get('/:id/questions',checkTopicExist,listQuestions)
+router.get('/:id/questions',checkTopicExist,listQuestions) //获取问题列表
 
 
 module.exports = router

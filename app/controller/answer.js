@@ -1,7 +1,7 @@
 const Answer = require('../model/answer')
 const User = require('../controller/user')
 const user = require('../model/user')
-
+const fieldHandle = require('../utils/fields')
 class answerController{
   async find(ctx){
     const {per_page} = ctx.query
@@ -32,9 +32,8 @@ class answerController{
   }
 
   async create(ctx){
-    ctx.vertifyParams({
+    ctx.verifyParams({
       content:{type:'string',required:true},
-      answerer:{type:'string',required:true}
     })
     const answer = await new Answer({
       ...ctx.request.body,
@@ -45,17 +44,16 @@ class answerController{
   }
 
   async update(ctx){
-    ctx.vertifyParams({
-      title:{type:'string',required:true},
-      description:{type:'string',required:false},  
+    ctx.verifyParams({
+      content:{type:'string',required:true},
     })
-    await ctx.state.answer.update(ctx.request.body)
+    await ctx.state.answer.updateOne(ctx.request.body)
     ctx.body = ctx.state.answer
   }
 
   async checkAnswerer(ctx,next){
     const {answer} = ctx.state;
-    if(answer.answerer.toString() !== user.state.user._id){
+    if(answer.answerer.toString() !== ctx.state.user._id){
       ctx.throw(403,'没有权限')
     }
     await next()

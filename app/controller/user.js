@@ -44,9 +44,8 @@ class userController{
 
   async update(ctx){
     ctx.verifyParams({
-      account:{type:'string',required:true},
-      password:{type:'string',required:true},
-      nickname:{type:'string',required:true}
+      password:{type:'string',required:false},
+      nickname:{type:'string',required:false}
     })
     const user = await User.findByIdAndUpdate(ctx.params.id,ctx.request.body)
     if(!user){
@@ -85,6 +84,7 @@ class userController{
     await next()
   }
 
+  //关注列表
   async listFollowing(ctx){
     const user = await User.findById(ctx.params.id).select('+following').populate('following')
     if(!user){
@@ -96,8 +96,6 @@ class userController{
   //获取粉丝列表
   async listFollowers(ctx){
      const users = await User.find({following:ctx.params.id})
-                             .select('+following')
-                             .populate('following')
      ctx.body = users
   }
 
@@ -107,21 +105,25 @@ class userController{
       me.following.push(ctx.params.id)
       me.save()
     }
+    ctx.status = 204
   }
 
   async unfollow(ctx){
     const me = await User.findById(ctx.state.user._id).select('+following')
+    console.log(ctx.state.user._id,me);
     const index = me.following.map(id => id.toString()).indexOf(ctx.params.id)
     if(index > -1){
       me.following.splice(index,1)
       me.save()
     }
+    ctx.status = 204
   }
 
-  async listFollowingTopic(ctx){
-    const user = await User.find(ctx.params.id)
-                            .select('+followingTopics')
-                            .populate('followingTopics')
+  //关注的话题列表
+  async listFollowingTopics(ctx){
+    const user = await User.findById(ctx.params.id)
+                           .select('+followingTopics')
+                           .populate('followingTopics')
     if(!user){
       ctx.throw(404,'不存在')
     }
@@ -131,9 +133,10 @@ class userController{
   async followTopic(ctx){
     const me = await User.findById(ctx.state.user._id).select('+followingTopics')
     if(!me.followingTopics.map(id => id.toString()).includes(ctx.params.id)){
-      me.following.push(ctx.params.id)
+      me.followingTopics.push(ctx.params.id)
       me.save()
     }
+    ctx.status = 204
   }
 
   async unfollowTopic(ctx){
@@ -143,6 +146,7 @@ class userController{
       me.followingTopics.splice(index,1)
       me.save()
     }
+    ctx.status = 204
   }
 
   async checkOwner(ctx,next){
@@ -159,7 +163,7 @@ class userController{
 
   //答案
 
-  async listLikeingAnswers(ctx){
+  async listLikingAnswers(ctx){
     const user = await User.findById(ctx.params.id).select('+likingAnswers').populate('likingAnswers')
     if(!user){
       ctx.throw(404,'用户不存在')
@@ -174,7 +178,7 @@ class userController{
       me.save()
       await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
     }
-    ctx.state = 204
+    ctx.status = 204
     await next()
   }
 
@@ -182,15 +186,15 @@ class userController{
     const me = await User.findById(ctx.state.user._id).select('+likingAnswers')
     const index = me.likingAnswers.map(id => id.toString()).indexOf(ctx.params.id)
     if(index > -1){
-      me.following.splice(index,1)
+      me.likingAnswers.splice(index,1)
       me.save()
       await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:-1}})
     }
-    ctx.state = 204
+    ctx.status = 204
   }
 
-  //踩
-  async listDislikeingAnswers(ctx){
+  //点踩列表
+  async listDislikingAnswers(ctx){
     const user = await User.findById(ctx.params.id).select('+dislikingAnswers').populate('dislikingAnswers')
     if(!user){
       ctx.throw(404,'用户不存在')
@@ -198,6 +202,7 @@ class userController{
     ctx.body = user.dislikingAnswers
   }
 
+  //点踩
   async dislikeAnswer(ctx,next){
     const me = await User.findById(ctx.state.user._id).select('+dislikingAnswers')
     if(!me.dislikingAnswers.map(id => id.toString()).includes(ctx.params.id)){
@@ -205,19 +210,20 @@ class userController{
       me.save()
       await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:-1}})
     }
-    ctx.state = 204
+    ctx.status = 204
     await next()
   }
 
+  //取消点餐
   async undislikeAnswer(ctx){
     const me = await User.findById(ctx.state.user._id).select('+dislikingAnswers')
     const index = me.dislikingAnswers.map(id => id.toString()).indexOf(ctx.params.id)
     if(index > -1){
-      me.following.splice(index,1)
+      me.dislikingAnswers.splice(index,1)
       me.save()
       await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
     }
-    ctx.state = 204
+    ctx.status = 204
   }
 
   //收藏
@@ -235,7 +241,7 @@ class userController{
       me.collectingAnswers.push(ctx.params.id)
       me.save()
     }
-    ctx.state = 204
+    ctx.status = 204
     await next()
   }
 
@@ -246,7 +252,7 @@ class userController{
       me.collectingAnswers.splice(index,1)
       me.save()
     }
-    ctx.state = 204
+    ctx.status = 204
   }
 }
 

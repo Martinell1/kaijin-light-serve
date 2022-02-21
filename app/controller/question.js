@@ -1,7 +1,6 @@
 const Question = require('../model/question')
-const User = require('../controller/user')
-const user = require('../model/user')
-
+const User = require('../model/user')
+const fieldHandle = require('../utils/fields')
 class questionController{
   async find(ctx){
     const {per_page} = ctx.query
@@ -29,17 +28,16 @@ class questionController{
   }
 
   async create(ctx){
-    ctx.vertifyParams({
+    ctx.verifyParams({
       title:{type:'string',required:true},
       description:{type:'string',required:false},
-      questioner:{type:'string',required:true}
     })
     const question = await new Question({...ctx.request.body,questioner:ctx.state.user._id}).save()
     ctx.body = question
   }
 
   async update(ctx){
-    ctx.vertifyParams({
+    ctx.verifyParams({
       title:{type:'string',required:true},
       description:{type:'string',required:false},  
     })

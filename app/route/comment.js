@@ -9,13 +9,13 @@ const {checkCommentExist,checkCommenter,
 
 const auth = jwt({secret:SECRET})
 
-router.get('/',find)
+router.get('/',find)  //评论列表
 
-router.post('/',create)
+router.get('/:id',checkCommentExist,findById) //获取单个评论
 
-router.patch('/:id',auth,checkCommentExist,checkCommenter,update)
+router.post('/',auth,create)//评论
 
-router.get('/:id',checkCommentExist,findById)
+router.patch('/:id',auth,checkCommentExist,checkCommenter,update) //更新评论
 
 router.delete('/:id',auth,checkCommentExist,checkCommenter,del)
 
