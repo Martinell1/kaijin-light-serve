@@ -18,6 +18,7 @@ class topicController{
     if(!topic){
       ctx.throw(404,'该话题不存在')
     }
+    ctx.state.topic = topic
     await next()
   }
 

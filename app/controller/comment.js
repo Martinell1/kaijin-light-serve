@@ -12,11 +12,11 @@ class commentController{
     ctx.body = await Comment.find({content:q,questionId,answerId,rootCommentId})
                             .limit(perPage)
                             .skip(page * perPage)
-                            .populate('commentator replyTo')
+                            .populate('holder replyTo')
   }
 
   async checkCommentExist(ctx,next){
-    const comment = await Comment.findById(ctx.params.id).select('+commentator')
+    const comment = await Comment.findById(ctx.params.id).select('+holder')
     if(!comment){
       ctx.throw(404,'该评论不存在')
     }else if(ctx.params.questionId && comment.questionId !== ctx.params.questionId){
@@ -30,7 +30,7 @@ class commentController{
 
   async findById(ctx){
     const {fields} = ctx.query
-    const comment = await Comment.findById(ctx.params.id).select(fieldHandle(fields)).populate('commentator')
+    const comment = await Comment.findById(ctx.params.id).select(fieldHandle(fields)).populate('holder')
     ctx.body = comment
   }
 
@@ -43,7 +43,7 @@ class commentController{
     const {questionId,answerId} = ctx.params
     const comment = await new Comment({
       ...ctx.request.body,
-      commentator:ctx.state.user._id,
+      holder:ctx.state.user._id,
       questionId,
       answerId
     }).save()
@@ -61,7 +61,7 @@ class commentController{
 
   async checkCommenter(ctx,next){
     const {comment} = ctx.state;
-    if(comment.commentator.toString() !== ctx.state.user._id){
+    if(comment.holder.toString() !== ctx.state.user._id){
       ctx.throw(403,'没有权限')
     }
     await next()

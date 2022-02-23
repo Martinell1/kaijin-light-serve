@@ -8,12 +8,13 @@ class articleController{
     const perPage = Math.max(per_page * 1,1)
     const q = new RegExp(ctx.query.q)
     ctx.body = await Article.find({$or:[{title:q},{description:q},{content:q}]})
-                             .limit(perPage)
-                             .skip(page * perPage)
+                            .populate('holder topics')
+                            .limit(perPage)
+                            .skip(page * perPage)
   }
 
   async checkArticleExist(ctx,next){
-    const article = await Article.findById(ctx.params.id).select('+author')
+    const article = await Article.findById(ctx.params.id).select('+holder')
     if(!article){
       ctx.throw(404,'该文章不存在')
     }
@@ -23,7 +24,7 @@ class articleController{
 
   async findById(ctx){
     const {fields} = ctx.query
-    const article = await Article.findById(ctx.params.id).select(fieldHandle(fields)).populate('author topics')
+    const article = await Article.findById(ctx.params.id).select(fieldHandle(fields)).populate('holder topics')
     ctx.body = article
   }
 
@@ -33,7 +34,7 @@ class articleController{
       description:{type:'string',required:true},
       content:{type:'string',required:true},
     })
-    const article = await new Article({...ctx.request.body,author:ctx.state.user._id}).save()
+    const article = await new Article({...ctx.request.body,holder:ctx.state.user._id}).save()
     ctx.body = article
   }
 
@@ -49,7 +50,7 @@ class articleController{
 
   async checkArticleer(ctx,next){
     const {article} = ctx.state;
-    if(article.author.toString() !== user.state.user._id){
+    if(article.holder.toString() !== user.state.user._id){
       ctx.throw(403,'没有权限')
     }
     await next()

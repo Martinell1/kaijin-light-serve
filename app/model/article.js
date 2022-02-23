@@ -8,11 +8,13 @@ const articleSchema = new Schema({
   description:{type:String},
   content:{type:String},
   avatar_url:{type:String},
-  author:{type:Schema.Types.ObjectId,ref:'User',required:true,select:false},
+  holder:{type:Schema.Types.ObjectId,ref:'User',required:true,select:false},
   topics:{
     type:[{type:Schema.Types.ObjectId,ref:'Topic'}],
     select:false
-  }
+  },
+  voteCount:{type:Number,required:true,default:0},
+  
 },{timesatamps:true})
 
 module.exports = model('Article',articleSchema)

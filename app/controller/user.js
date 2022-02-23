@@ -4,8 +4,25 @@ const fieldHandle = require('../utils/fields')
 const User = require('../model/user')
 const Question = require('../model/question')
 const Answer = require('../model/answer')
+const Article = require('../model/article')
+const Comment = require('../model/comment')
 
 class userController{
+  async checkOwner(ctx,next){
+    if(ctx.params.id !== ctx.state.user._id){
+        ctx.throw(403,'没有权限')
+    }
+    await next()
+  }
+
+  async checkUserExist(ctx,next){
+    const user = await User.findById(ctx.params.id)
+    if(!user){
+      ctx.throw(404,'该用户不存在')
+    }
+    await next()
+  }
+
   async find(ctx){
     const {per_page} = ctx.query
     const page = Math.max(ctx.query.page * 1,1) - 1
@@ -76,184 +93,169 @@ class userController{
     ctx.body = {token}
   }
 
-  async checkUserExist(ctx,next){
-    const user = await User.findById(ctx.params.id)
-    if(!user){
-      ctx.throw(404,'该用户不存在')
-    }
-    await next()
+  //问题列表
+  async listQuestions(ctx){
+    const questions = await Question.find({holder:ctx.params.id})
+    ctx.body = questions
   }
 
-  //关注列表
-  async listFollowing(ctx){
-    const user = await User.findById(ctx.params.id).select('+following').populate('following')
-    if(!user){
-      ctx.throw(404)
-    }
-    ctx.body = user.following
+  //回答列表
+  async listAnswers(ctx){
+    const answers = await Question.find({holder:ctx.params.id})
+    ctx.body = answers
+  }
+
+  //文章列表
+  async listArticles(ctx){
+    const articles = await Question.find({holder:ctx.params.id})
+    ctx.body = articles
+  }
+
+  //评论列表
+  async listComments(ctx){
+    const comments = await Question.find({holder:ctx.params.id})
+    ctx.body = comments
+  }
+
+  //讨论列表
+  async listTalks(ctx){
+    const talks = await Question.find({holder:ctx.params.id})
+    ctx.body = talks
   }
 
   //获取粉丝列表
   async listFollowers(ctx){
-     const users = await User.find({following:ctx.params.id})
-     ctx.body = users
-  }
-
-  async follow(ctx){
-    const me = await User.findById(ctx.state.user._id).select('+following')
-    if(!me.following.map(id => id.toString()).includes(ctx.params.id)){
-      me.following.push(ctx.params.id)
-      me.save()
-    }
-    ctx.status = 204
-  }
-
-  async unfollow(ctx){
-    const me = await User.findById(ctx.state.user._id).select('+following')
-    console.log(ctx.state.user._id,me);
-    const index = me.following.map(id => id.toString()).indexOf(ctx.params.id)
-    if(index > -1){
-      me.following.splice(index,1)
-      me.save()
-    }
-    ctx.status = 204
-  }
-
-  //关注的话题列表
-  async listFollowingTopics(ctx){
-    const user = await User.findById(ctx.params.id)
-                           .select('+followingTopics')
-                           .populate('followingTopics')
-    if(!user){
-      ctx.throw(404,'不存在')
-    }
-    ctx.body = user.followingTopics
+    const users = await User.find({following:ctx.params.id})
+    ctx.body = users
  }
 
-  async followTopic(ctx){
-    const me = await User.findById(ctx.state.user._id).select('+followingTopics')
-    if(!me.followingTopics.map(id => id.toString()).includes(ctx.params.id)){
-      me.followingTopics.push(ctx.params.id)
-      me.save()
-    }
-    ctx.status = 204
-  }
+  //=====================关注
 
-  async unfollowTopic(ctx){
-    const me = await User.findById(ctx.state.user._id).select('+followingTopics')
-    const index = me.followingTopics.map(id => id.toString()).indexOf(ctx.params.id)
-    if(index > -1){
-      me.followingTopics.splice(index,1)
-      me.save()
-    }
-    ctx.status = 204
-  }
-
-  async checkOwner(ctx,next){
-    if(ctx.params.id !== ctx.state.user._id){
-        ctx.throw(403,'没有权限')
+  async setFollowField(ctx,next){
+    if(ctx.state.user){
+      ctx.state.field = 'following'
+      ctx.state.ctl = User
+    }else if(ctx.state.article){
+      ctx.state.field = 'followingArticles'
+      ctx.state.ctl = Article
+    }else if(ctx.state.topic){
+      ctx.state.field = 'followingTopics'
+      ctx.state.ctl = Topic
+    }else if(ctx.state.question){
+      ctx.state.field = 'followingQuestions'
+      ctx.state.ctl = Question
+    }else if(ctx.state.answer){
+      ctx.state.field = 'followingAnswers'
+      ctx.state.ctl = Answer
     }
     await next()
   }
 
-  async listQuestions(ctx){
-    const questions = await Question.find({questioner:ctx.params.id})
-    ctx.body = questions
-  }
-
-  //答案
-
-  async listLikingAnswers(ctx){
-    const user = await User.findById(ctx.params.id).select('+likingAnswers').populate('likingAnswers')
-    if(!user){
-      ctx.throw(404,'用户不存在')
-    }
-    ctx.body = user.likingAnswers
-  }
-
-  async likeAnswer(ctx,next){
-    const me = await User.findById(ctx.state.user._id).select('+likingAnswers')
-    if(!me.likingAnswers.map(id => id.toString()).includes(ctx.params.id)){
-      me.likingAnswers.push(ctx.params.id)
+  //关注
+  async follow(ctx){
+    const {field,ctl,user} = ctx.state
+    const me = await ctl.findById(user._id).select('+'+field)
+    if(!me[field].map(id => id.toString()).includes(ctx.params.id)){
+      me[field].push(ctx.params.id)
       me.save()
-      await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
     }
     ctx.status = 204
+  }
+
+  //取关
+  async unfollow(ctx){
+    const {field,ctl,user} = ctx.state
+    const me = await User.findById(user._id).select('+'+field)
+    const index = me[field].map(id => id.toString()).indexOf(ctx.params.id)
+    if(index > -1){
+      me[field].splice(index,1)
+      me.save()
+    }
+    ctx.status = 204
+  }
+
+  //=====================点赞/点踩
+
+  async setLikeField(ctx,next){
+    if(ctx.state.answer){
+      ctx.state.field = 'likingAnswers'
+      ctx.state.ctl = Answer
+    }else if(ctx.state.article){
+      ctx.state.field = 'likingArticles'
+      ctx.state.ctl = Article
+    }else if(ctx.state.question){
+      ctx.state.field = 'likingQuestions'
+      ctx.state.ctl = Question
+    }else if(ctx.state.comment){
+      ctx.state.field = 'likingComments'
+      ctx.state.ctl = Comment
+    }else if(ctx.state.talk){
+      ctx.state.field = 'likingTalks'
+      ctx.state.ctl = Talk
+    }
     await next()
   }
 
-  async unlikeAnswer(ctx){
-    const me = await User.findById(ctx.state.user._id).select('+likingAnswers')
-    const index = me.likingAnswers.map(id => id.toString()).indexOf(ctx.params.id)
-    if(index > -1){
-      me.likingAnswers.splice(index,1)
+  //点赞
+  async like(ctx,next){
+    const {field,ctl,user} = ctx.state
+    const me = await User.findById(user._id).select('+'+field)
+    if(!me[field].map(id => id.toString()).includes(ctx.params.id)){
+      me[field].push(ctx.params.id)
       me.save()
-      await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:-1}})
-    }
-    ctx.status = 204
+      await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
+      if(['likingAnswers','likingComments','likingTalks'].indexOf(field) > -1){
+        await next()
+      }else{
+        ctx.status = 204
+      }
+    } 
   }
 
-  //点踩列表
-  async listDislikingAnswers(ctx){
-    const user = await User.findById(ctx.params.id).select('+dislikingAnswers').populate('dislikingAnswers')
-    if(!user){
-      ctx.throw(404,'用户不存在')
+  //取消点赞
+  async unlike(ctx){
+    const {field,ctl,user} = ctx.state
+    const me = await User.findById(user._id).select('+'+field)
+    const index = me[field].map(id => id.toString()).indexOf(ctx.params.id)
+    if(index > -1){
+      me[field].splice(index,1)
+      me.save()
+      await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:-1}})
     }
-    ctx.body = user.dislikingAnswers
+    ctx.status = 204
   }
 
   //点踩
-  async dislikeAnswer(ctx,next){
-    const me = await User.findById(ctx.state.user._id).select('+dislikingAnswers')
-    if(!me.dislikingAnswers.map(id => id.toString()).includes(ctx.params.id)){
-      me.dislikingAnswers.push(ctx.params.id)
+  async dislike(ctx,next){
+    let {field,ctl,user} = ctx.state
+    field = 'dis'+field
+    const me = await User.findById(user._id).select('+'+field)
+    if(!me[field].map(id => id.toString()).includes(ctx.params.id)){
+      me[field].push(ctx.params.id)
       me.save()
-      await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:-1}})
+      await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:-1}})
+      if(['dislikingAnswers','dislikingComments','dislikingTalks'].indexOf(field) > -1){
+        await next()
+      }else{
+        ctx.status = 204
+      }
     }
-    ctx.status = 204
-    await next()
   }
 
-  //取消点餐
-  async undislikeAnswer(ctx){
-    const me = await User.findById(ctx.state.user._id).select('+dislikingAnswers')
-    const index = me.dislikingAnswers.map(id => id.toString()).indexOf(ctx.params.id)
+  //取消点踩
+  async undislike(ctx){
+    let {field,ctl,user} = ctx.state
+    field = 'dis'+field
+    const me = await User.findById(user._id).select('+'+field)
+    const index = me[field].map(id => id.toString()).indexOf(ctx.params.id)
     if(index > -1){
-      me.dislikingAnswers.splice(index,1)
+      me[field].splice(index,1)
       me.save()
-      await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
+      await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
     }
     ctx.status = 204
   }
 
-  //收藏
-  async listCollectingAnswers(ctx){
-    const user = await User.findById(ctx.params.id).select('+collectingAnswers').populate('collectingAnswers')
-    if(!user){
-      ctx.throw(404,'用户不存在')
-    }
-    ctx.body = user.collectingAnswers
-  }
-
-  async collectAnswer(ctx,next){
-    const me = await User.findById(ctx.state.user._id).select('+collectingAnswers')
-    if(!me.collectingAnswers.map(id => id.toString()).includes(ctx.params.id)){
-      me.collectingAnswers.push(ctx.params.id)
-      me.save()
-    }
-    ctx.status = 204
-    await next()
-  }
-
-  async uncollectAnswer(ctx){
-    const me = await User.findById(ctx.state.user._id).select('+collectingAnswers')
-    const index = me.collectingAnswers.map(id => id.toString()).indexOf(ctx.params.id)
-    if(index > -1){
-      me.collectingAnswers.splice(index,1)
-      me.save()
-    }
-    ctx.status = 204
-  }
 }
 
 module.exports = new userController()

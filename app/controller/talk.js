@@ -12,11 +12,11 @@ class talkController{
     ctx.body = await Talk.find({content:q,articleId,rootTalkId})
                          .limit(perPage)
                          .skip(page * perPage)
-                         .populate('talker replyTo')
+                         .populate('holder replyTo')
   }
 
   async checkTalkExist(ctx,next){
-    const talk = await Talk.findById(ctx.params.id).select('+talker')
+    const talk = await Talk.findById(ctx.params.id).select('+holder')
     if(!talk){
       ctx.throw(404,'该讨论不存在')
     }else if(ctx.params.articleId && talk.articleId !== ctx.params.articleId){
@@ -28,7 +28,7 @@ class talkController{
 
   async findById(ctx){
     const {fields} = ctx.query
-    const talk = await Talk.findById(ctx.params.id).select(fieldHandle(fields)).populate('talker')
+    const talk = await Talk.findById(ctx.params.id).select(fieldHandle(fields)).populate('holder')
     ctx.body = talk
   }
 
@@ -41,7 +41,7 @@ class talkController{
     const {articleId} = ctx.params
     const talk = await new Talk({
       ...ctx.request.body,
-      talker:ctx.state.user._id,
+      holder:ctx.state.user._id,
       articleId,
     }).save()
     ctx.body = talk
@@ -56,9 +56,9 @@ class talkController{
     ctx.body = ctx.state.talk
   }
 
-  async checkTalker(ctx,next){
+  async checkholder(ctx,next){
     const {talk} = ctx.state;
-    if(talk.talker.toString() !== ctx.state.user._id){
+    if(talk.holder.toString() !== ctx.state.user._id){
       ctx.throw(403,'没有权限')
     }
     await next()

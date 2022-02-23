@@ -36,6 +36,19 @@ const userSchema = new Schema({
     type:[{type:Schema.Types.ObjectId,ref:'Topic'}],
     select:false
   },
+  followingArticles:{
+    type:[{type:Schema.Types.ObjectId,ref:'Article'}],
+    select:false
+  },
+  followingQuestions:{
+    type:[{type:Schema.Types.ObjectId,ref:'Question'}],
+    select:false
+  },
+  followingAnswers:{
+    type:[{type:Schema.Types.ObjectId,ref:'Answer'}],
+    select:false
+  },
+  
   likingAnswers:{
     type:[{type:Schema.Types.ObjectId,ref:'Answer'}],
     select:false
@@ -44,8 +57,28 @@ const userSchema = new Schema({
     type:[{type:Schema.Types.ObjectId,ref:'Answer'}],
     select:false
   },
-  collectingAnswers:{
-    type:[{type:Schema.Types.ObjectId,ref:'Answer'}],
+  likingQuestions:{
+    type:[{type:Schema.Types.ObjectId,ref:'Questions'}],
+    select:false
+  },
+  likingArticles:{
+    type:[{type:Schema.Types.ObjectId,ref:'Article'}],
+    select:false
+  },
+  likingComments:{
+    type:[{type:Schema.Types.ObjectId,ref:'Comment'}],
+    select:false
+  },
+  dislikingComments:{
+    type:[{type:Schema.Types.ObjectId,ref:'Comment'}],
+    select:false
+  },
+  likingTalks:{
+    type:[{type:Schema.Types.ObjectId,ref:'Talk'}],
+    select:false
+  },
+  dislikingTalks:{
+    type:[{type:Schema.Types.ObjectId,ref:'Talk'}],
     select:false
   }
 },{timestamps:true})

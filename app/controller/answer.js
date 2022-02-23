@@ -14,7 +14,7 @@ class answerController{
   }
 
   async checkAnswerExist(ctx,next){
-    const answer = await Answer.findById(ctx.params.id).select('+answerer')
+    const answer = await Answer.findById(ctx.params.id).select('+holder')
     if(!answer){
       ctx.throw(404,'该答案不存在')
     //只有删改查的时候检查此逻辑，赞和踩的时候不调用
@@ -27,7 +27,7 @@ class answerController{
 
   async findById(ctx){
     const {fields} = ctx.query
-    const answer = await Answer.findById(ctx.params.id).select(fieldHandle(fields)).populate('answerer')
+    const answer = await Answer.findById(ctx.params.id).select(fieldHandle(fields)).populate('holder')
     ctx.body = answer
   }
 
@@ -37,7 +37,7 @@ class answerController{
     })
     const answer = await new Answer({
       ...ctx.request.body,
-      answerer:ctx.state.user._id,
+      holder:ctx.state.user._id,
       questionId:ctx.params.questionId
     }).save()
     ctx.body = answer
@@ -51,9 +51,9 @@ class answerController{
     ctx.body = ctx.state.answer
   }
 
-  async checkAnswerer(ctx,next){
+  async checkholder(ctx,next){
     const {answer} = ctx.state;
-    if(answer.answerer.toString() !== ctx.state.user._id){
+    if(answer.holder.toString() !== ctx.state.user._id){
       ctx.throw(403,'没有权限')
     }
     await next()

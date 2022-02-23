@@ -13,7 +13,7 @@ class questionController{
   }
 
   async checkQuestionExist(ctx,next){
-    const question = await Question.findById(ctx.params.id).select('+questioner')
+    const question = await Question.findById(ctx.params.id).select('+holder')
     if(!question){
       ctx.throw(404,'该问题不存在')
     }
@@ -23,7 +23,7 @@ class questionController{
 
   async findById(ctx){
     const {fields} = ctx.query
-    const question = await Question.findById(ctx.params.id).select(fieldHandle(fields)).populate('questioner topics')
+    const question = await Question.findById(ctx.params.id).select(fieldHandle(fields)).populate('holder topics')
     ctx.body = question
   }
 
@@ -32,7 +32,7 @@ class questionController{
       title:{type:'string',required:true},
       description:{type:'string',required:false},
     })
-    const question = await new Question({...ctx.request.body,questioner:ctx.state.user._id}).save()
+    const question = await new Question({...ctx.request.body,holder:ctx.state.user._id}).save()
     ctx.body = question
   }
 
@@ -45,9 +45,9 @@ class questionController{
     ctx.body = ctx.state.question
   }
 
-  async checkQuestioner(ctx,next){
+  async checkholder(ctx,next){
     const {question} = ctx.state;
-    if(question.questioner.toString() !== user.state.user._id){
+    if(question.holder.toString() !== user.state.user._id){
       ctx.throw(403,'没有权限')
     }
     await next()

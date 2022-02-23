@@ -3,7 +3,7 @@ const Router = require("koa-router");
 const router = new Router({prefix:'/article/:articleId/talk'})
 const {SECRET} = require('../config/constance')
 
-const {checkTalkExist,checkTalker,
+const {checkTalkExist,checkholder,
   find,create,update,findById,delete:del} 
 = require('../controller/talk');
 
@@ -15,9 +15,9 @@ router.get('/:id',checkTalkExist,findById) //获取单个讨论
 
 router.post('/',auth,create)//讨论
 
-router.patch('/:id',auth,checkTalkExist,checkTalker,update) //更新讨论
+router.patch('/:id',auth,checkTalkExist,checkholder,update) //更新讨论
 
-router.delete('/:id',auth,checkTalkExist,checkTalker,del)
+router.delete('/:id',auth,checkTalkExist,checkholder,del)
 
 
 module.exports = router
