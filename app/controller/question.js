@@ -8,6 +8,7 @@ class questionController{
     const perPage = Math.max(per_page * 1,1)
     const q = new RegExp(ctx.query.q)
     ctx.body = await Question.find({$or:[{title:q},{description:q}]})
+                             .populate('holder topics')
                              .limit(perPage)
                              .skip(page * perPage)
   }
@@ -24,6 +25,7 @@ class questionController{
   async findById(ctx){
     const {fields} = ctx.query
     const question = await Question.findById(ctx.params.id).select(fieldHandle(fields)).populate('holder topics')
+    await Question.findByIdAndUpdate(ctx.params.id,{$inc:{viewCount:1}})
     ctx.body = question
   }
 

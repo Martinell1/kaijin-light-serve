@@ -9,7 +9,7 @@ class commentController{
     const perPage = Math.max(per_page * 1,1)
     const q = new RegExp(ctx.query.q)
     const {questionId,answerId} = ctx.params
-    ctx.body = await Comment.find({content:q,questionId,answerId,rootCommentId})
+    ctx.body = await Comment.find({content:q,question:questionId,answerId,rootCommentId})
                             .limit(perPage)
                             .skip(page * perPage)
                             .populate('holder replyTo')

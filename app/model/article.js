@@ -14,7 +14,7 @@ const articleSchema = new Schema({
     select:false
   },
   voteCount:{type:Number,required:true,default:0},
-  
+  viewCount:{type:Number,required:true,default:0}
 },{timesatamps:true})
 
 module.exports = model('Article',articleSchema)

@@ -5,7 +5,7 @@ const {SECRET} = require('../config/constance')
 
 const {checkOwner,checkUserExist,
   find,create,update,findById,del,login,
-  listQuestions,listArticles,listAnswers,listComments,listTalks,listFollowers,
+  listQuestions,listArticles,listAnswers,listComments,listTalks,listFollowers,listFollowings,
   setFollowField,follow,unfollow,   //关注
   setLikeField,like,unlike,dislike,undislike}  //点赞/点踩
 = require('../controller/user')
@@ -43,13 +43,15 @@ router.get('/:id/talks',listTalks)  //讨论列表
 
 router.get('/:id/followers',listFollowers)//粉丝列表
 
+router.get('/:id/followings',listFollowings)//粉丝列表
+
 //=====================关注
 
 //=====用户
 
-router.put('/following/:id',auth,checkUserExist,setFollowField,follow)//关注某人
+router.put('/followings/:id',auth,checkUserExist,setFollowField,follow)//关注某人
 
-router.delete('/following/:id',auth,checkUserExist,setFollowField,unfollow)//取关某人
+router.delete('/followings/:id',auth,checkUserExist,setFollowField,unfollow)//取关某人
 
 //=====话题
 
@@ -73,7 +75,7 @@ router.delete('/followingQuestions/:id',auth,checkQuestionExist,setFollowField,u
 
 router.put('/followingArticles/:id',auth,checkArticleExist,setFollowField,follow)  //关注文章
 
-router.delete('/followingAticles/:id',auth,checkArticleExist,setFollowField,unfollow) //取消关注文章
+router.delete('/followingArticles/:id',auth,checkArticleExist,setFollowField,unfollow) //取消关注文章
 
 
 
@@ -97,13 +99,13 @@ router.delete('/likingArticles/:id',auth,checkArticleExist,setLikeField,unlike) 
 
 //=====问题
 
-router.put('/likingArticles/:id',auth,checkQuestionExist,setLikeField,like) //点赞问题
+router.put('/likingQuestions/:id',auth,checkQuestionExist,setLikeField,like) //点赞问题
 
 router.delete('/likingQuestions/:id',auth,checkQuestionExist,setLikeField,unlike) //取消点赞问题
 
 //=====评论
 
-router.put('/likingComments/:id',auth,checkCommentExist,like,setLikeField,undislike) //点赞评论
+router.put('/likingComments/:id',auth,checkCommentExist,setLikeField,like,undislike) //点赞评论
 
 router.delete('/likingComments/:id',auth,checkCommentExist,setLikeField,unlike) //取消点赞评论
 
@@ -113,11 +115,11 @@ router.delete('/dislikingComments/:id',auth,checkCommentExist,setLikeField,undis
 
 //=====讨论
 
-router.put('/likingTalks/:id',auth,checkTalkExist,like,setLikeField,undislike) //点赞讨论
+router.put('/likingTalks/:id',auth,checkTalkExist,setLikeField,like,undislike) //点赞讨论
 
 router.delete('/likingTalks/:id',auth,checkTalkExist,setLikeField,unlike) //取消点赞讨论
 
-router.put('/dislikingTalks/:id',auth,checkTalkExist,dislike,setLikeField,unlike)  //点踩讨论
+router.put('/dislikingTalks/:id',auth,checkTalkExist,setLikeField,dislike,unlike)  //点踩讨论
 
 router.delete('/dislikingTalks/:id',auth,checkTalkExist,setLikeField,undislike)  //取消点踩讨论
 

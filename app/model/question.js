@@ -12,7 +12,8 @@ const questionSchema = new Schema({
     type:[{type:Schema.Types.ObjectId,ref:'Topic'}],
     select:false
   },
-  voteCount:{type:Number,required:true,default:0}
+  voteCount:{type:Number,required:true,default:0},
+  viewCount:{type:Number,required:true,default:0}
 },{timestamps:true})
 
 module.exports = model('Question',questionSchema)

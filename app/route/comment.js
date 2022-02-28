@@ -1,6 +1,6 @@
 const jwt = require('koa-jwt')
 const Router = require("koa-router");
-const router = new Router({prefix:'/questions/:questionId/answer/:answerId/comment'})
+const router = new Router({prefix:'/question/:questionId/answer/:answerId/comment'})
 const {SECRET} = require('../config/constance')
 
 const {checkCommentExist,checkCommenter,

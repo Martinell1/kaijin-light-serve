@@ -6,6 +6,7 @@ const Question = require('../model/question')
 const Answer = require('../model/answer')
 const Article = require('../model/article')
 const Comment = require('../model/comment')
+const Talk = require('../model/talk')
 
 class userController{
   async checkOwner(ctx,next){
@@ -36,7 +37,7 @@ class userController{
     const {fields} = ctx.query
     const user = await User.findById(ctx.params.id)
                            .select(fieldHandle(fields))
-                           .populate('following locations employments.company employments.job education.school education.major')
+                           .populate('locations employments.company employments.job education.school education.major')
     if(!user){
       ctx.throw(404,'用户不存在')
     }
@@ -65,10 +66,11 @@ class userController{
       nickname:{type:'string',required:false}
     })
     const user = await User.findByIdAndUpdate(ctx.params.id,ctx.request.body)
+    const newUser = await User.findById(ctx.params.id)
     if(!user){
       ctx.throw(404,'用户不存在')
     }
-    ctx.body = user
+    ctx.body = newUser
   }
 
   async del(ctx){
@@ -90,42 +92,48 @@ class userController{
     }
     const {_id} = user
     const token = jwt.sign({_id},SECRET,{expiresIn:'7d'})
-    ctx.body = {token}
+    ctx.body = {id:_id,token}
   }
 
   //问题列表
   async listQuestions(ctx){
-    const questions = await Question.find({holder:ctx.params.id})
+    const questions = await Question.find({holder:ctx.params.id}).populate('holder topics')
     ctx.body = questions
   }
 
   //回答列表
   async listAnswers(ctx){
-    const answers = await Question.find({holder:ctx.params.id})
+    const answers = await Answer.find({holder:ctx.params.id}).populate('holder question')
     ctx.body = answers
   }
 
   //文章列表
   async listArticles(ctx){
-    const articles = await Question.find({holder:ctx.params.id})
+    const articles = await Article.find({holder:ctx.params.id}).populate('holder topics')
     ctx.body = articles
   }
 
   //评论列表
   async listComments(ctx){
-    const comments = await Question.find({holder:ctx.params.id})
+    const comments = await Comment.find({holder:ctx.params.id})
     ctx.body = comments
   }
 
   //讨论列表
   async listTalks(ctx){
-    const talks = await Question.find({holder:ctx.params.id})
+    const talks = await Talk.find({holder:ctx.params.id})
     ctx.body = talks
   }
 
   //获取粉丝列表
   async listFollowers(ctx){
-    const users = await User.find({following:ctx.params.id})
+    const users = await User.find({followings:ctx.params.id})
+    ctx.body = users
+ }
+
+  //获取粉丝列表
+  async listFollowings(ctx){
+    const users = await User.find(ctx.params.id).populate('followings').followings
     ctx.body = users
  }
 
@@ -133,7 +141,7 @@ class userController{
 
   async setFollowField(ctx,next){
     if(ctx.state.user){
-      ctx.state.field = 'following'
+      ctx.state.field = 'followings'
       ctx.state.ctl = User
     }else if(ctx.state.article){
       ctx.state.field = 'followingArticles'
@@ -204,12 +212,13 @@ class userController{
       me[field].push(ctx.params.id)
       me.save()
       await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
+      
       if(['likingAnswers','likingComments','likingTalks'].indexOf(field) > -1){
         await next()
       }else{
         ctx.status = 204
       }
-    } 
+    }
   }
 
   //取消点赞

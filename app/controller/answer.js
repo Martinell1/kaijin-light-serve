@@ -8,9 +8,10 @@ class answerController{
     const page = Math.max(ctx.query.page * 1,1)-1
     const perPage = Math.max(per_page * 1,1)
     const q = new RegExp(ctx.query.q)
-    ctx.body = await Answer.find({content:q,questionId:ctx.params.questionId})
+    ctx.body = await Answer.find({content:q,question:ctx.params.questionId})
                              .limit(perPage)
                              .skip(page * perPage)
+                             .populate('holder')
   }
 
   async checkAnswerExist(ctx,next){
@@ -18,7 +19,7 @@ class answerController{
     if(!answer){
       ctx.throw(404,'该答案不存在')
     //只有删改查的时候检查此逻辑，赞和踩的时候不调用
-    }else if(ctx.params.questionId && answer.questionId !== ctx.params.questionId){
+    }else if(ctx.params.questionId && answer.question !== ctx.params.questionId){
       ctx.throw(404,'该答案不存在')
     }
     ctx.state.answer = answer
@@ -38,7 +39,7 @@ class answerController{
     const answer = await new Answer({
       ...ctx.request.body,
       holder:ctx.state.user._id,
-      questionId:ctx.params.questionId
+      question:ctx.params.questionId
     }).save()
     ctx.body = answer
   }

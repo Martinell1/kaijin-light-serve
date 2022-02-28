@@ -5,12 +5,12 @@ const fieldHandle = require('../utils/fields')
 
 class topicController{
   async find(ctx){
-    const {per_page} = ctx.query
-    const page = Math.max(ctx.query.page * 1,1)-1
-    const perPage = Math.max(per_page * 1,1)
+    // const {per_page} = ctx.query
+    // const page = Math.max(ctx.query.page * 1,1)-1
+    // const perPage = Math.max(per_page * 1,1)
     ctx.body = await Topic.find({name:new RegExp(ctx.query.q)})
-                          .limit(perPage)
-                          .skip(page * perPage)
+                          // .limit(perPage)
+                          // .skip(page * perPage)
   }
 
   async checkTopicExist(ctx,next){
@@ -39,7 +39,6 @@ class topicController{
   }
 
   async update(ctx){
-    console.log(ctx.params.id,ctx.request.body);
     ctx.verifyParams({
       name:{type:'string',required:false},
       avatar_url:{type:'string',required:false},

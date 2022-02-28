@@ -1,6 +1,6 @@
 const jwt = require('koa-jwt')
 const Router = require("koa-router");
-const router = new Router({prefix:'/questions/:questionId/answer'})
+const router = new Router({prefix:'/question/:questionId/answer'})
 const {SECRET} = require('../config/constance')
 
 const {checkAnswerExist,checkholder,
@@ -18,6 +18,5 @@ router.get('/:id',checkAnswerExist,findById) //获取单个问题
 router.patch('/:id',auth,checkAnswerExist,checkholder,update) //更新回答
 
 router.delete('/:id',auth,checkAnswerExist,checkholder,del)
-
 
 module.exports = router

@@ -25,6 +25,7 @@ class articleController{
   async findById(ctx){
     const {fields} = ctx.query
     const article = await Article.findById(ctx.params.id).select(fieldHandle(fields)).populate('holder topics')
+    await Article.findByIdAndUpdate(ctx.params.id,{$inc:{viewCount:1}})
     ctx.body = article
   }
 
@@ -41,7 +42,7 @@ class articleController{
   async update(ctx){
     ctx.verifyParams({
       title:{type:'string',required:true},
-      description:{type:'string',required:true},
+      description:{type:'string',required:false},
       content:{type:'string',required:true}, 
     })
     await ctx.state.article.update(ctx.request.body)
