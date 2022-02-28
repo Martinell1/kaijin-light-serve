@@ -37,7 +37,7 @@ class userController{
     const {fields} = ctx.query
     const user = await User.findById(ctx.params.id)
                            .select(fieldHandle(fields))
-                           .populate('locations employments.company employments.job education.school education.major')
+  
     if(!user){
       ctx.throw(404,'用户不存在')
     }
@@ -86,7 +86,8 @@ class userController{
       account:{type:'string',required:true},
       password:{type:'string',required:true}
     })
-    const user = await User.findOne(ctx.request.body)
+    const {account,password} = ctx.request.body
+    const user = await User.findOne({account,password})
     if(!user){
       ctx.throw(401,'用户名或密码不正确')
     }
