@@ -12,7 +12,7 @@ const path = require('path')
 app.use(static(path.join(__dirname,'public')))
 app.use(cors({
   origin: function(ctx) { //设置允许来自指定域名请求
-    return 'http://localhost:3001'; //只允许http://localhost:8080这个域名的请求
+    return 'http://localhost:3000'; //只允许http://localhost:8080这个域名的请求
   },
   maxAge: 5, //指定本次预检请求的有效期，单位为秒。
   credentials: true, //是否允许发送Cookie
@@ -34,6 +34,6 @@ app.use(body({
 app.use(parameter(app))
 routing(app)
 
-app.listen(3000,()=>{
-  console.log('koa 监听 3000 端口');
+app.listen(3001,()=>{
+  console.log('koa 监听 3001 端口');
 })
