@@ -25,7 +25,7 @@ class userController{
   }
 
   async find(ctx){
-    const {per_page} = ctx.query
+    const {per_page,q} = ctx.query
     const page = Math.max(ctx.query.page * 1,1) - 1
     const perPage = Math.max(per_page * 1,1)
     ctx.body = await User.find({nickname:new RegExp(ctx.query.q)})
@@ -37,7 +37,7 @@ class userController{
     const {fields} = ctx.query
     const user = await User.findById(ctx.params.id)
                            .select(fieldHandle(fields))
-  
+    
     if(!user){
       ctx.throw(404,'用户不存在')
     }

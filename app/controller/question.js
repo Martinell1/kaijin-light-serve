@@ -6,11 +6,21 @@ class questionController{
     const {per_page} = ctx.query
     const page = Math.max(ctx.query.page * 1,1)-1
     const perPage = Math.max(per_page * 1,1)
-    const q = new RegExp(ctx.query.q)
-    ctx.body = await Question.find({$or:[{title:q},{description:q}]})
-                             .populate('holder topics')
-                             .limit(perPage)
-                             .skip(page * perPage)
+    let {q} = ctx.query
+    let reg = new RegExp(/[A-Za-z0-9]+/)
+    if(reg.test(q) && q.length === 24){
+      ctx.body = await Question.find({topics:q})
+                               .populate('holder topics')
+                               .limit(perPage)
+                               .skip(page * perPage)
+    }else{
+      q = new RegExp(q)
+      ctx.body = await Question.find({$or:[{title:q},{description:q}]})
+                               .populate('holder topics')
+                               .limit(perPage)
+                               .skip(page * perPage)
+    }
+
   }
 
   async checkQuestionExist(ctx,next){

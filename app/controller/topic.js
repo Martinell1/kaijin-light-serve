@@ -8,7 +8,7 @@ class topicController{
     // const {per_page} = ctx.query
     // const page = Math.max(ctx.query.page * 1,1)-1
     // const perPage = Math.max(per_page * 1,1)
-    ctx.body = await Topic.find({name:new RegExp(ctx.query.q)})
+    ctx.body = await Topic.find({name:new RegExp(ctx.query.q,"i")})
                           // .limit(perPage)
                           // .skip(page * perPage)
   }
