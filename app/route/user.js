@@ -7,7 +7,7 @@ const {checkOwner,checkUserExist,
   find,create,update,findById,del,login,
   listQuestions,listArticles,listAnswers,listComments,listTalks,listFollowers,listFollowings,
   setFollowField,follow,unfollow,   //关注
-  setLikeField,like,unlike,dislike,undislike}  //点赞/点踩
+  setLikeField,like,unlike}  //点赞/点踩
 = require('../controller/user')
 
 const {checkTopicExist} = require('../controller/topic')
@@ -83,13 +83,9 @@ router.delete('/followingArticles/:id',auth,checkArticleExist,setFollowField,unf
 
 //=====回答
 
-router.put('/likingAnswers/:id',auth,checkAnswerExist,setLikeField,like,undislike) //点赞回答
+router.put('/likingAnswers/:id',auth,checkAnswerExist,setLikeField,like) //点赞回答
 
 router.delete('/likingAnswers/:id',auth,checkAnswerExist,setLikeField,unlike)//取消点赞回答
-
-router.put('/dislikingAnswers/:id',auth,checkAnswerExist,setLikeField,dislike,unlike)  //点踩回答
-
-router.delete('/dislikingAnswers/:id',auth,checkAnswerExist,setLikeField,undislike)  //取消点踩回答
 
 //=====文章
 
@@ -105,22 +101,14 @@ router.delete('/likingQuestions/:id',auth,checkQuestionExist,setLikeField,unlike
 
 //=====评论
 
-router.put('/likingComments/:id',auth,checkCommentExist,setLikeField,like,undislike) //点赞评论
+router.put('/likingComments/:id',auth,checkCommentExist,setLikeField,like) //点赞评论
 
 router.delete('/likingComments/:id',auth,checkCommentExist,setLikeField,unlike) //取消点赞评论
 
-router.put('/dislikingComments/:id',auth,checkCommentExist,setLikeField,dislike,unlike)  //点踩评论
-
-router.delete('/dislikingComments/:id',auth,checkCommentExist,setLikeField,undislike)  //取消点踩评论
-
 //=====讨论
 
-router.put('/likingTalks/:id',auth,checkTalkExist,setLikeField,like,undislike) //点赞讨论
+router.put('/likingTalks/:id',auth,checkTalkExist,setLikeField,like) //点赞讨论
 
 router.delete('/likingTalks/:id',auth,checkTalkExist,setLikeField,unlike) //取消点赞讨论
-
-router.put('/dislikingTalks/:id',auth,checkTalkExist,setLikeField,dislike,unlike)  //点踩讨论
-
-router.delete('/dislikingTalks/:id',auth,checkTalkExist,setLikeField,undislike)  //取消点踩讨论
 
 module.exports = router

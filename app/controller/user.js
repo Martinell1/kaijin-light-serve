@@ -214,12 +214,10 @@ class userController{
       me.save()
       await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
       
-      if(['likingAnswers','likingComments','likingTalks'].indexOf(field) > -1){
-        await next()
-      }else{
-        ctx.status = 204
-      }
+    }else{
+      ctx.body = '已点赞'
     }
+    ctx.status = 204
   }
 
   //取消点赞
@@ -231,40 +229,12 @@ class userController{
       me[field].splice(index,1)
       me.save()
       await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:-1}})
+    }else{
+      ctx.body = '已点赞'
     }
     ctx.status = 204
   }
 
-  //点踩
-  async dislike(ctx,next){
-    let {field,ctl,user} = ctx.state
-    field = 'dis'+field
-    const me = await User.findById(user._id).select('+'+field)
-    if(!me[field].map(id => id.toString()).includes(ctx.params.id)){
-      me[field].push(ctx.params.id)
-      me.save()
-      await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:-1}})
-      if(['dislikingAnswers','dislikingComments','dislikingTalks'].indexOf(field) > -1){
-        await next()
-      }else{
-        ctx.status = 204
-      }
-    }
-  }
-
-  //取消点踩
-  async undislike(ctx){
-    let {field,ctl,user} = ctx.state
-    field = 'dis'+field
-    const me = await User.findById(user._id).select('+'+field)
-    const index = me[field].map(id => id.toString()).indexOf(ctx.params.id)
-    if(index > -1){
-      me[field].splice(index,1)
-      me.save()
-      await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
-    }
-    ctx.status = 204
-  }
 
 }
 
