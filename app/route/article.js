@@ -4,12 +4,14 @@ const router = new Router({prefix:'/article'})
 const {SECRET} = require('../config/constance')
 
 const {checkArticleExist,
-  find,create,update,findById,delete:del} 
+  find,hot,create,update,findById,delete:del} 
 = require('../controller/article');
 
 const auth = jwt({secret:SECRET})
 
 router.get('/',find)  //文章列表
+
+router.get('/hot',hot)
 
 router.get('/:id',checkArticleExist,findById) //获取单个文章
 

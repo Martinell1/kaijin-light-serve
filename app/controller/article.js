@@ -22,6 +22,12 @@ class articleController{
     }   
   }
 
+  async hot(ctx,next){
+    ctx.body = await Article.find()
+                             .sort({'voteCount':-1})
+                             .limit(10)
+  }
+
   async checkArticleExist(ctx,next){
     const article = await Article.findById(ctx.params.id).select('+holder')
     if(!article){

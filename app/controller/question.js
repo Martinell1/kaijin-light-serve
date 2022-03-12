@@ -23,6 +23,12 @@ class questionController{
 
   }
 
+  async hot(ctx,next){
+    ctx.body = await Question.find()
+                             .sort({'voteCount':1})
+                             .limit(10)
+  }
+
   async checkQuestionExist(ctx,next){
     const question = await Question.findById(ctx.params.id).select('+holder')
     if(!question){
