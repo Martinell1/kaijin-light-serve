@@ -17,7 +17,6 @@ const uploadImage = async ctx =>{
   const putPolicy = new qiniu.rs.PutPolicy(options);
   const uploadToken = putPolicy.uploadToken(mac);
   if(uploadToken){
-    console.log('token',uploadToken);
     ctx.body = uploadToken
   }
 }

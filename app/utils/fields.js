@@ -1,5 +1,5 @@
 module.exports = function(fields){
-  return fields.split(';')
+  return fields?.split(';')
                .filter(f => f)
                .map(f => '+'+f)
                .join(' ') || '';
