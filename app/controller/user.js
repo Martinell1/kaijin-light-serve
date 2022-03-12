@@ -132,10 +132,10 @@ class userController{
     ctx.body = users
  }
 
-  //获取粉丝列表
+  //获取关注列表
   async listFollowings(ctx){
-    const users = await User.find(ctx.params.id).populate('followings').followings
-    ctx.body = users
+    const user = await User.findById(ctx.params.id).populate('followings')
+    ctx.body = user.followings
  }
 
   //=====================关注
