@@ -141,10 +141,7 @@ class userController{
   //=====================关注
 
   async setFollowField(ctx,next){
-    if(ctx.state.user){
-      ctx.state.field = 'followings'
-      ctx.state.ctl = User
-    }else if(ctx.state.article){
+    if(ctx.state.article){
       ctx.state.field = 'followingArticles'
       ctx.state.ctl = Article
     }else if(ctx.state.topic){
@@ -156,6 +153,9 @@ class userController{
     }else if(ctx.state.answer){
       ctx.state.field = 'followingAnswers'
       ctx.state.ctl = Answer
+    }else if(ctx.state.user){
+      ctx.state.field = 'followings'
+      ctx.state.ctl = User
     }
     await next()
   }
@@ -163,7 +163,7 @@ class userController{
   //关注
   async follow(ctx){
     const {field,ctl,user} = ctx.state
-    const me = await ctl.findById(user._id).select('+'+field)
+    const me = await User.findById(user._id).select('+'+field)
     if(!me[field].map(id => id.toString()).includes(ctx.params.id)){
       me[field].push(ctx.params.id)
       me.save()
