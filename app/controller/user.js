@@ -7,6 +7,7 @@ const Answer = require('../model/answer')
 const Article = require('../model/article')
 const Comment = require('../model/comment')
 const Talk = require('../model/talk')
+const Moment = require('../model/moment')
 
 class userController{
   async checkOwner(ctx,next){
@@ -198,6 +199,9 @@ class userController{
     }else if(ctx.state.comment){
       ctx.state.field = 'likingComments'
       ctx.state.ctl = Comment
+    }else if(ctx.state.moment){
+      ctx.state.field = 'likingMoments'
+      ctx.state.ctl = Moment
     }else if(ctx.state.talk){
       ctx.state.field = 'likingTalks'
       ctx.state.ctl = Talk
@@ -213,7 +217,6 @@ class userController{
       me[field].push(ctx.params.id)
       me.save()
       await ctl.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount:1}})
-      
     }else{
       ctx.body = '已点赞'
     }

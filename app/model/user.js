@@ -72,6 +72,10 @@ const userSchema = new Schema({
     type:[{type:Schema.Types.ObjectId,ref:'Talk'}],
     select:false
   },
+  likingMoments:{
+    type:[{type:Schema.Types.ObjectId,ref:'Moment'}],
+    select:false
+  },
   dislikingTalks:{
     type:[{type:Schema.Types.ObjectId,ref:'Talk'}],
     select:false

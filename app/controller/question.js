@@ -25,7 +25,8 @@ class questionController{
 
   async hot(ctx,next){
     ctx.body = await Question.find()
-                             .sort({'voteCount':1})
+                             .sort({'voteCount':-1})
+                             .populate('holder topics')
                              .limit(10)
   }
 

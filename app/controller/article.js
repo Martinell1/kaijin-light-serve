@@ -25,6 +25,7 @@ class articleController{
   async hot(ctx,next){
     ctx.body = await Article.find()
                              .sort({'voteCount':-1})
+                             .populate('holder topics')
                              .limit(10)
   }
 
