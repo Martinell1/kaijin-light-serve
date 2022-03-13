@@ -5,16 +5,16 @@ const fieldHandle = require('../utils/fields')
 
 class topicController{
   async find(ctx){
-    // const {per_page} = ctx.query
-    // const page = Math.max(ctx.query.page * 1,1)-1
-    // const perPage = Math.max(per_page * 1,1)
+    const {per_page} = ctx.query
+    const page = Math.max(ctx.query.page * 1,1)-1
+    const perPage = Math.max(per_page * 1,1)
     ctx.body = await Topic.find({name:new RegExp(ctx.query.q,"i")})
-                          // .limit(perPage)
-                          // .skip(page * perPage)
+                          .limit(perPage)
+                          .skip(page * perPage)
   }
 
   async total(ctx,next){
-    const topics = await Topics.find()
+    const topics = await Topic.find()
     ctx.body = topics.length
   }
 
