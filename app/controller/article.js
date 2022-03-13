@@ -8,7 +8,7 @@ class articleController{
     const perPage = Math.max(per_page * 1,1)
     let {q} = ctx.query
     let reg = new RegExp(/[A-Za-z0-9]+/)
-    if(reg.test(q) && q.length === 24){
+    if(reg.test(q) && q?.length === 24){
       ctx.body = await Article.find({topics:q})
                               .populate('holder topics')
                               .limit(perPage)
@@ -20,6 +20,11 @@ class articleController{
                                .limit(perPage)
                                .skip(page * perPage)
     }   
+  }
+
+  async total(ctx,next){
+    const articles = await Article.find()
+    ctx.body = articles.length
   }
 
   async hot(ctx,next){
