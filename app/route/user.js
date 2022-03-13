@@ -4,7 +4,7 @@ const router = new Router({prefix:'/user'})
 const {SECRET} = require('../config/constance')
 
 const {checkOwner,checkUserExist,
-  find,create,update,findById,del,login,
+  find,total,create,update,findById,del,login,
   listQuestions,listArticles,listAnswers,listComments,listTalks,listFollowers,listFollowings,
   setFollowField,follow,unfollow,   //关注
   setLikeField,like,unlike}  //点赞/点踩
@@ -21,6 +21,8 @@ const {checkMomentExist} = require('../controller/moment')
 const auth = jwt({secret:SECRET})
 
 router.get('/',find)//获取用户列表
+
+router.get('/total',total) 
 
 router.post('/',create)//新建用户
 

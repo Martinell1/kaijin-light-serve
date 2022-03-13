@@ -4,12 +4,14 @@ const router = new Router({prefix:'/topic'})
 const {SECRET} = require('../config/constance')
 
 const {checkTopicExist,
-  find,create,update,findById,
+  find,total,create,update,findById,
   listFollowers,listQuestions} = require('../controller/topic');
 
 const auth = jwt({secret:SECRET})
 
 router.get('/',find)  //话题列表
+
+router.get('/total',total)  
 
 router.post('/',create) //新建话题
 

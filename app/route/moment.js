@@ -4,12 +4,14 @@ const router = new Router({prefix:'/moment'})
 const {SECRET} = require('../config/constance')
 
 const {checkMomentExist,
-  find,following,hot,create,update,findById,delete:del} 
+  find,total,following,hot,create,update,findById,delete:del} 
 = require('../controller/moment');
 
 const auth = jwt({secret:SECRET})
 
 router.get('/',find)  //问题列表
+
+router.get('/total',total)
 
 router.get('/following',auth,following)  //问题列表
 

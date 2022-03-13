@@ -23,6 +23,11 @@ class questionController{
 
   }
 
+  async total(ctx,next){
+    const questions = await Question.find()
+    ctx.body = questions.length
+  }
+
   async hot(ctx,next){
     ctx.body = await Question.find()
                              .sort({'voteCount':-1})

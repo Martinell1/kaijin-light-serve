@@ -17,6 +17,11 @@ class userController{
     await next()
   }
 
+  async total(ctx,next){
+    const users = await Users.find()
+    ctx.body = users.length
+  }
+
   async checkUserExist(ctx,next){
     const user = await User.findById(ctx.params.id)
     if(!user){

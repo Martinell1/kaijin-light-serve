@@ -14,6 +14,11 @@ class momentController{
 
   }
 
+  async total(ctx,next){
+    const moments = await Moment.find()
+    ctx.body = moments.length
+  }
+
   async following(ctx){
     const {per_page} = ctx.query
     const page = Math.max(ctx.query.page * 1,1)-1

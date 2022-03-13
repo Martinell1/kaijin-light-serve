@@ -13,6 +13,11 @@ class topicController{
                           // .skip(page * perPage)
   }
 
+  async total(ctx,next){
+    const topics = await Topics.find()
+    ctx.body = topics.length
+  }
+
   async checkTopicExist(ctx,next){
     const topic = await Topic.findById(ctx.params.id)
     if(!topic){

@@ -4,12 +4,14 @@ const router = new Router({prefix:'/question'})
 const {SECRET} = require('../config/constance')
 
 const {checkQuestionExist,
-  find,hot,create,update,findById,delete:del} 
+  find,total,hot,create,update,findById,delete:del} 
 = require('../controller/question');
 
 const auth = jwt({secret:SECRET})
 
 router.get('/',find)  //问题列表
+
+router.get('/total',total)
 
 router.get('/hot',hot)  //问题列表
 
