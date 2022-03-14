@@ -13,6 +13,7 @@ const articleSchema = new Schema({
     type:[{type:Schema.Types.ObjectId,ref:'Topic'}],
     select:false
   },
+  recommand:{type:Boolean,default:false},
   voteCount:{type:Number,required:true,default:0},
   viewCount:{type:Number,required:true,default:0}
 },{timesatamps:true})

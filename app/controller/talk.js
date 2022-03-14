@@ -66,7 +66,7 @@ class talkController{
   
   async delete(ctx){
     await Talk.findByIdAndRemove(ctx.params.id)
-    ctx.state = 204
+    ctx.body = '删除成功'
  }
 }
 

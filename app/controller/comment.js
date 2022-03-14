@@ -69,7 +69,7 @@ class commentController{
   
   async delete(ctx){
     await Comment.findByIdAndRemove(ctx.params.id)
-    ctx.state = 204
+    ctx.body = '删除成功'
  }
 }
 

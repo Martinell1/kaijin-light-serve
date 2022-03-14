@@ -53,6 +53,12 @@ class topicController{
     ctx.body = topic
   }
 
+  async del(ctx){
+    console.log('删除');
+    await Topic.findByIdAndRemove(ctx.params.id)
+    ctx.body = '删除成功'
+ }
+
   //获取粉丝列表
   async listFollowers(ctx){
     const users = await User.find({followingTopics:ctx.params.id})

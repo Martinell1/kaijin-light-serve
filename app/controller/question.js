@@ -79,7 +79,7 @@ class questionController{
   
   async delete(ctx){
     await Question.findByIdAndRemove(ctx.params.id)
-    ctx.state = 204
+    ctx.body = '删除成功'
  }
 }
 

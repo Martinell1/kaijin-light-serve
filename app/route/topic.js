@@ -4,7 +4,7 @@ const router = new Router({prefix:'/topic'})
 const {SECRET} = require('../config/constance')
 
 const {checkTopicExist,
-  find,total,create,update,findById,
+  find,total,create,update,findById,del,
   listFollowers,listQuestions} = require('../controller/topic');
 
 const auth = jwt({secret:SECRET})
@@ -18,6 +18,8 @@ router.post('/',create) //新建话题
 router.patch('/:id',auth,checkTopicExist,update) //更新话题
 
 router.get('/:id',checkTopicExist,findById) //获取单个话题
+
+router.delete('/:id',auth,checkTopicExist,del)
 
 router.get('/:id/followers',checkTopicExist,listFollowers) //获取粉丝列表
 

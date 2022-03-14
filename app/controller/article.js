@@ -61,13 +61,15 @@ class articleController{
   }
 
   async update(ctx){
+    console.log(ctx.request.body.recommand);
     ctx.verifyParams({
       title:{type:'string',required:true},
       description:{type:'string',required:false},
       content:{type:'string',required:true}, 
     })
-    await ctx.state.article.update(ctx.request.body)
-    ctx.body = ctx.state.article
+    const article = await Article.findByIdAndUpdate(ctx.params.id,ctx.request.body)
+    const newArticle = await Article.findById(ctx.params.id)
+    ctx.body = newArticle
   }
 
   async checkArticleer(ctx,next){
@@ -80,7 +82,7 @@ class articleController{
   
   async delete(ctx){
     await Article.findByIdAndRemove(ctx.params.id)
-    ctx.state = 204
+    ctx.body = '删除成功'
  }
 }
 

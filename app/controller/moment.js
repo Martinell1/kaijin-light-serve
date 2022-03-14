@@ -82,7 +82,7 @@ class momentController{
   
   async delete(ctx){
     await Moment.findByIdAndRemove(ctx.params.id)
-    ctx.state = 204
+    ctx.body = '删除成功'
  }
 }
 

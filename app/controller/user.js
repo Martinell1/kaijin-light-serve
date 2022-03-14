@@ -84,7 +84,7 @@ class userController{
     if(!user){
       ctx.throw(404,'用户不存在')
     }
-    ctx.status = 204
+    ctx.body = '删除成功'
   }
 
   async login(ctx){
