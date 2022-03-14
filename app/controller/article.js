@@ -34,6 +34,28 @@ class articleController{
                              .limit(10)
   }
 
+  async recommand(ctx){
+    const {per_page} = ctx.query
+    const page = Math.max(ctx.query.page * 1,1)-1
+    const perPage = Math.max(per_page * 1,1)
+    ctx.body = await Article.find()
+                            .populate('holder topics')
+                            .limit(perPage)
+                            .skip(page * perPage)
+  }
+
+  async following(ctx){
+    const {per_page} = ctx.query
+    const page = Math.max(ctx.query.page * 1,1)-1
+    const perPage = Math.max(per_page * 1,1)
+    const user = ctx.state.user
+    const me = await User.findById(user._id).select('+followings')
+    ctx.body = await Article.find({holder:{$in:me.followings}})
+                           .populate('holder topics')
+                           .limit(perPage)
+                           .skip(page * perPage)
+  }
+
   async checkArticleExist(ctx,next){
     const article = await Article.findById(ctx.params.id).select('+holder')
     if(!article){
@@ -61,7 +83,6 @@ class articleController{
   }
 
   async update(ctx){
-    console.log(ctx.request.body.recommand);
     ctx.verifyParams({
       title:{type:'string',required:true},
       description:{type:'string',required:false},

@@ -9,7 +9,7 @@ const routing = require('./route');
 const path = require('path')
 
 
-app.use(static(path.join(__dirname,'public')))
+app.use(static(path.join(__dirname,'./static')))
 app.use(cors({
   origin: function(ctx) { //设置允许来自指定域名请求
     return '*'; //只允许http://localhost:8080这个域名的请求
@@ -21,13 +21,13 @@ app.use(cors({
 }))
 app.use(error({
   // postFormat:(e,{stack,...rest})=>{
-  //   process.env.NODE_ENV === 'production' ? rest : {stack,...rest}
+  //   process.env.NODE_ENV === 'development' ?  : {stack,...rest}
   // }
 }))
 app.use(body({
   multipart:true,
   formidable:{
-    uploadDir:path.join(__dirname,'public/uploads'),
+    uploadDir:path.join(__dirname,'./static'),
     keepExtensions:true
   }
 }))

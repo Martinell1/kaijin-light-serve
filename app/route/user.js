@@ -115,8 +115,8 @@ router.put('/likingTalks/:id',auth,checkTalkExist,setLikeField,like) //点赞讨
 router.delete('/likingTalks/:id',auth,checkTalkExist,setLikeField,unlike) //取消点赞讨论
 
 //======动态
-router.put('/likingMoments/:id',auth,checkMomentExist,setLikeField,like) //点赞回答
+router.put('/likingMoments/:id',auth,checkMomentExist,setLikeField,like) //点赞动态
 
-router.delete('/likingMoments/:id',auth,checkMomentExist,setLikeField,unlike)//取消点赞回答
+router.delete('/likingMoments/:id',auth,checkMomentExist,setLikeField,unlike)//取消点赞动态
 
 module.exports = router

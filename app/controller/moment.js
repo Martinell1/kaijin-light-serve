@@ -25,12 +25,10 @@ class momentController{
     const perPage = Math.max(per_page * 1,1)
     const user = ctx.state.user
     const me = await User.findById(user._id).select('+followings')
-    const res = await Moment.find({holder:{$in:me.followings}})
+    ctx.body = await Moment.find({holder:{$in:me.followings}})
                            .populate('holder')
                            .limit(perPage)
                            .skip(page * perPage)
-                           console.log(res);
-                           ctx.body = res
   }
 
   async hot(ctx,next){

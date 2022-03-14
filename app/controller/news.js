@@ -29,7 +29,7 @@ class newsController{
   async hot(ctx){
     ctx.body = await News.find()
                              .sort({'voteCount':-1})
-                             .populate('holder topics')
+                             .populate('topics')
                              .limit(10)
   }
 
