@@ -14,6 +14,11 @@ class answerController{
                              .populate('holder')
   }
 
+  async total(ctx,next){
+    const articles = await Article.find()
+    ctx.body = articles.length
+  }
+
   async checkAnswerExist(ctx,next){
     const answer = await Answer.findById(ctx.params.id).select('+holder')
     if(!answer){

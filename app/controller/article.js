@@ -22,12 +22,12 @@ class articleController{
     }   
   }
 
-  async total(ctx,next){
-    const articles = await Article.find()
+  async total(ctx){
+    const articles = await Article.find({news:false})
     ctx.body = articles.length
   }
 
-  async hot(ctx,next){
+  async hot(ctx){
     ctx.body = await Article.find()
                              .sort({'voteCount':-1})
                              .populate('holder topics')
