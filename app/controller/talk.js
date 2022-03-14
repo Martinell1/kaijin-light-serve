@@ -1,5 +1,4 @@
 const Talk = require('../model/talk')
-const User = require('../model/user')
 const fieldHandle = require('../utils/fields')
 
 class talkController{
