@@ -4,7 +4,7 @@ const router = new Router({prefix:'/user'})
 const {SECRET} = require('../config/constance')
 
 const {checkOwner,checkUserExist,
-  find,total,create,update,findById,del,login,
+  find,total,create,update,findById,del,login,modifyPassword,
   listQuestions,listArticles,listAnswers,listComments,listTalks,listFollowers,listFollowings,
   setFollowField,follow,unfollow,   //关注
   setLikeField,like,unlike}  //点赞/点踩
@@ -27,6 +27,8 @@ router.get('/total',total)
 router.post('/',create)//新建用户
 
 router.patch('/:id',auth,checkOwner,update)//更新用户
+
+router.patch('/modifyPassword/:id',auth,checkOwner,modifyPassword)//更新用户
 
 router.get('/:id',findById)//获取指定用户
 

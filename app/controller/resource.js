@@ -14,10 +14,13 @@ class resourceController{
                                  .skip(page * perPage)
       }else{
         q = new RegExp(q)
-        ctx.body = await Resource.find({$or:[{title:q},{description:q}]})
+        console.log(q);
+        const res = await Resource.find({$or:[{title:q},{description:q}]})
                                  .populate('holder topics')
                                  .limit(perPage)
                                  .skip(page * perPage)
+                                 console.log(res);
+                                 ctx.body = res
       }
     }
 

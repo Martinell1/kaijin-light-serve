@@ -1,0 +1,8 @@
+1.计算机专业本科学历，热爱前端
+2.熟悉HTML,CSS
+3.JS基本功比较扎实，熟悉ES6、原型、闭包等。
+4.熟悉Vue开发，对Vue的全家桶有一定的开发使用经验。
+5.熟悉其他前端技术如ElementUI、Sass、TailwindCSS
+6.对webpack有一定了解
+7.对后端构建有一定了解（JAVA,Node.js），熟悉RESTful Api
+8.熟悉GIT版本管理工具

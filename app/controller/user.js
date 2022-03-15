@@ -66,6 +66,19 @@ class userController{
     ctx.body = user
   }
 
+  async modifyPassword(ctx){
+    const {oldpass,newpass} = ctx.request.body
+    const user = await User.findOne({id:ctx.params.id,password:oldpass})
+    if(user){
+      user.password = newpass
+      await User.findByIdAndUpdate(ctx.params.id,user)
+      ctx.body = '修改成功'
+    }else{
+      ctx.body = '修改失败'
+    }
+    
+  }
+
   async update(ctx){
     ctx.verifyParams({
       password:{type:'string',required:false},
