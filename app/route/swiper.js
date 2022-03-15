@@ -3,7 +3,7 @@ const Router = require("koa-router");
 const router = new Router({prefix:'/swiper'})
 const {SECRET} = require('../config/constance')
 
-const {find,findById,create,update} 
+const {find,findById,create,update,del} 
 = require('../controller/swiper');
 
 const auth = jwt({secret:SECRET})
@@ -15,5 +15,7 @@ router.get('/:id',findById)
 router.post('/',auth,create) //新增文章
 
 router.patch('/:id',auth,update) //更新文章
+
+router.delete('/:id',auth,del) //更新文章
 
 module.exports = router

@@ -21,6 +21,11 @@ class swiperController{
       const swiper = await Swiper.findByIdAndUpdate(ctx.params.id,ctx.request.body)
       ctx.body = swiper
     }
+
+    async del(ctx){
+      await Swiper.findByIdAndRemove(ctx.params.id)
+      ctx.body = '删除成功'
+   }
 }
 
 module.exports = new swiperController()

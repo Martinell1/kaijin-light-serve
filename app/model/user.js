@@ -43,12 +43,7 @@ const userSchema = new Schema({
     type:[{type:Schema.Types.ObjectId,ref:'Answer'}],
     select:false
   },
-  
   likingAnswers:{
-    type:[{type:Schema.Types.ObjectId,ref:'Answer'}],
-    select:false
-  },
-  dislikingAnswers:{
     type:[{type:Schema.Types.ObjectId,ref:'Answer'}],
     select:false
   },
@@ -64,20 +59,12 @@ const userSchema = new Schema({
     type:[{type:Schema.Types.ObjectId,ref:'Comment'}],
     select:false
   },
-  dislikingComments:{
-    type:[{type:Schema.Types.ObjectId,ref:'Comment'}],
-    select:false
-  },
   likingTalks:{
     type:[{type:Schema.Types.ObjectId,ref:'Talk'}],
     select:false
   },
   likingMoments:{
     type:[{type:Schema.Types.ObjectId,ref:'Moment'}],
-    select:false
-  },
-  dislikingTalks:{
-    type:[{type:Schema.Types.ObjectId,ref:'Talk'}],
     select:false
   }
 },{timestamps:true})
