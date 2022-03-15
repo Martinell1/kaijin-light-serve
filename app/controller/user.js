@@ -40,7 +40,6 @@ class userController{
   }
 
   async findById(ctx){
-    console.log('findbyid');
     const {fields} = ctx.query
     const user = await User.findById(ctx.params.id)
                            .select(fieldHandle(fields))
