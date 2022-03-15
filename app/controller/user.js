@@ -17,8 +17,8 @@ class userController{
     await next()
   }
 
-  async total(ctx,next){
-    const users = await Users.find()
+  async total(ctx){
+    const users = await User.find()
     ctx.body = users.length
   }
 
@@ -40,6 +40,7 @@ class userController{
   }
 
   async findById(ctx){
+    console.log('findbyid');
     const {fields} = ctx.query
     const user = await User.findById(ctx.params.id)
                            .select(fieldHandle(fields))
