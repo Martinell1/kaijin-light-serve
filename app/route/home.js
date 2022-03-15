@@ -29,7 +29,8 @@ const uploadResource = async (ctx, next) => {
   const file = ctx.request.files.file; // 获取上传文件
   // 创建可读流
   const reader = fs.createReadStream(file.path);
-  let filePath = path.join(__dirname, './static/') + `/${file.name}`;
+  let filePath = path.join(__dirname, './static/') + `${file.name}`;
+  const ext = file.name.split('.').pop(); // 获取上传文件扩展名
   console.log('filePath',filePath);
   // 创建可写流
   const upStream = fs.createWriteStream(filePath);
@@ -44,9 +45,10 @@ const uploadResource = async (ctx, next) => {
 
 const resourceSend = async (ctx)=>{
   const name = ctx.params.name;
+  console.log(name);
   // const filePath = path.join(__dirname, './static/') + `${name}`;
-  const filePath = `./static/${name}`
-  const result = ctx.attachment(filePath);
+  const filePath = `static/${name}`
+  ctx.attachment(filePath);
   await send(ctx, filePath);
  }
 

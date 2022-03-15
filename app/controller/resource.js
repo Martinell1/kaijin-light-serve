@@ -14,7 +14,6 @@ class resourceController{
                                  .skip(page * perPage)
       }else{
         q = new RegExp(q)
-        console.log(q);
         const res = await Resource.find({$or:[{title:q},{description:q}]})
                                  .populate('holder topics')
                                  .limit(perPage)
