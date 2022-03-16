@@ -8,6 +8,7 @@ const Article = require('../model/article')
 const Comment = require('../model/comment')
 const Talk = require('../model/talk')
 const Moment = require('../model/moment')
+const FIELDS = require('../utils/constance')
 
 class userController{
   async checkOwner(ctx,next){
@@ -110,9 +111,32 @@ class userController{
     if(!user){
       ctx.throw(401,'用户名或密码不正确')
     }
-    const {_id} = user
+    const userInfo = await User.findById(user._id)
+                                  .select(fieldHandle(FIELDS))
+    const {_id} = userInfo
     const token = jwt.sign({_id},SECRET,{expiresIn:'7d'})
-    ctx.body = {id:_id,token}
+    ctx.body = {_id,token,userInfo}
+  }
+
+  async loginAdmin(ctx){
+    ctx.verifyParams({
+      account:{type:'string',required:true},
+      password:{type:'string',required:true}
+    })
+    const {account,password} = ctx.request.body
+    const user = await User.findOne({account,password})
+    if(!user){
+      return ctx.body === '用户名或密码错误'
+    }
+    if(user.role === 'user'){
+      return ctx.body === '暂无权限'
+    }
+
+    const userInfo = await User.findById(user._id)
+                                  .select(fieldHandle(FIELDS))
+    const {_id} = userInfo
+    const token = jwt.sign({_id},SECRET,{expiresIn:'7d'})
+    ctx.body = {_id,token,userInfo}
   }
 
   //问题列表

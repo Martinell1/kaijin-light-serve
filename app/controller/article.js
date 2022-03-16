@@ -49,6 +49,7 @@ class articleController{
     const page = Math.max(ctx.query.page * 1,1)-1
     const perPage = Math.max(per_page * 1,1)
     const user = ctx.state.user
+    console.log(user);
     const me = await User.findById(user._id).select('+followings')
     ctx.body = await Article.find({holder:{$in:me.followings}})
                            .populate('holder topics')
