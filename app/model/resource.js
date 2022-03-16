@@ -9,7 +9,7 @@ const resourceSchema = new Schema({
     holder:{type:Schema.Types.ObjectId,ref:'User',required:true},
     type:{type:String},
     url:{type:String},
-    downCount:{type:Number,default:0},
+    downloadCount:{type:Number,default:0},
     topics:{
       type:[{type:Schema.Types.ObjectId,ref:'Topic'}],
     },

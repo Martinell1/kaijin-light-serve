@@ -18,7 +18,6 @@ class resourceController{
                                  .populate('holder topics')
                                  .limit(perPage)
                                  .skip(page * perPage)
-                                 console.log(res);
                                  ctx.body = res
       }
     }
@@ -28,6 +27,11 @@ class resourceController{
                                .sort({'voteCount':-1})
                                .populate('holder topics')
                                .limit(10)
+    }
+
+    async downloadResource(ctx){
+      ctx.body = await Resource.findByIdAndUpdate(ctx.params.id,{$inc:{downloadCount:1}})
+
     }
 
     async checkResourceExist(ctx,next){

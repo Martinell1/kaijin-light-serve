@@ -31,21 +31,17 @@ const uploadResource = async (ctx, next) => {
   const reader = fs.createReadStream(file.path);
   let filePath = path.join(__dirname, './static/') + `${file.name}`;
   const ext = file.name.split('.').pop(); // 获取上传文件扩展名
-  console.log('filePath',filePath);
   // 创建可写流
   const upStream = fs.createWriteStream(filePath);
-  console.log('upStream',upStream);
   // 可读流通过管道写入可写流
   reader.pipe(upStream);
   const result = file.path.split('\\')
-  console.log(result);
   ctx.body = result[result.length-1]
   //return ctx.body = 'http://localhost:3001/'+ result[result.length-1];
 }
 
 const resourceSend = async (ctx)=>{
   const name = ctx.params.name;
-  console.log(name);
   // const filePath = path.join(__dirname, './static/') + `${name}`;
   const filePath = `static/${name}`
   ctx.attachment(filePath);

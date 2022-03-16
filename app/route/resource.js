@@ -3,12 +3,14 @@ const Router = require("koa-router");
 const router = new Router({prefix:'/resource'})
 const {SECRET} = require('../config/constance')
 
-const {find,hot,findById,create,update,checkResourceExist,del} 
+const {find,hot,findById,create,update,checkResourceExist,del,downloadResource} 
 = require('../controller/resource');
 
 const auth = jwt({secret:SECRET})
 
 router.get('/',find)  //文章列表
+
+router.post('/download/:id',downloadResource)  //文章列表
 
 router.get('/hot',hot)
 
