@@ -28,6 +28,8 @@ router.post('/',create)//新建用户
 
 router.patch('/:id',auth,checkOwner,update)//更新用户
 
+router.patch('/admin/:id',update)//更新用户
+
 router.patch('/modifyPassword/:id',auth,checkOwner,modifyPassword)//更新用户
 
 router.get('/:id',findById)//获取指定用户
