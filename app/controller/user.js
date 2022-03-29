@@ -139,6 +139,7 @@ class userController{
     ctx.body = {_id,token,userInfo}
   }
 
+
   //问题列表
   async listQuestions(ctx){
     const questions = await Question.find({holder:ctx.params.id}).populate('holder topics')
