@@ -61,7 +61,9 @@ class commentController{
 
   async checkCommenter(ctx,next){
     const {comment} = ctx.state;
-    if(comment.holder.toString() !== ctx.state.user._id){
+    if(comment.holder.toString() !== ctx.state.user._id
+    && ctx.state.user.role !== 'superadmin'
+    && ctx.state.user.role !== 'admin'){
       ctx.throw(403,'没有权限')
     }
     await next()

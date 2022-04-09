@@ -96,7 +96,9 @@ class articleController{
 
   async checkArticleer(ctx,next){
     const {article} = ctx.state;
-    if(article.holder.toString() !== user.state.user._id){
+    if(article.holder.toString() !== user.state.user._id
+    && ctx.state.user.role !== 'superadmin'
+    && ctx.state.user.role !== 'admin'){
       ctx.throw(403,'没有权限')
     }
     await next()

@@ -57,7 +57,9 @@ class talkController{
 
   async checkholder(ctx,next){
     const {talk} = ctx.state;
-    if(talk.holder.toString() !== ctx.state.user._id){
+    if(talk.holder.toString() !== ctx.state.user._id 
+    && ctx.state.user.role !== 'superadmin'
+    && ctx.state.user.role !== 'admin'){
       ctx.throw(403,'没有权限')
     }
     await next()

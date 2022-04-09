@@ -12,7 +12,9 @@ const FIELDS = require('../utils/constance')
 
 class userController{
   async checkOwner(ctx,next){
-    if(ctx.params.id !== ctx.state.user._id){
+    if(ctx.params.id !== ctx.state.user._id
+      && ctx.state.user.role !== 'superadmin'
+      && ctx.state.user.role !== 'admin'){
         ctx.throw(403,'没有权限')
     }
     await next()
@@ -113,8 +115,8 @@ class userController{
     }
     const userInfo = await User.findById(user._id)
                                   .select(fieldHandle(FIELDS))
-    const {_id} = userInfo
-    const token = jwt.sign({_id},SECRET,{expiresIn:'7d'})
+    const {_id,role} = userInfo
+    const token = jwt.sign({_id,role},SECRET,{expiresIn:'7d'})
     ctx.body = {_id,token,userInfo}
   }
 
@@ -134,8 +136,8 @@ class userController{
 
     const userInfo = await User.findById(user._id)
                                   .select(fieldHandle(FIELDS))
-    const {_id} = userInfo
-    const token = jwt.sign({_id},SECRET,{expiresIn:'7d'})
+    const {_id,role} = userInfo
+    const token = jwt.sign({_id,role},SECRET,{expiresIn:'7d'})
     ctx.body = {_id,token,userInfo}
   }
 

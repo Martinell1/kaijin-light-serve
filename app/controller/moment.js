@@ -72,7 +72,9 @@ class momentController{
 
   async checkholder(ctx,next){
     const {moment} = ctx.state;
-    if(moment.holder.toString() !== user.state.user._id){
+    if(moment.holder.toString() !== user.state.user._id
+    && ctx.state.user.role !== 'superadmin'
+    && ctx.state.user.role !== 'admin'){
       ctx.throw(403,'没有权限')
     }
     await next()

@@ -24,7 +24,7 @@ class answerController{
     if(!answer){
       ctx.throw(404,'该答案不存在')
     //只有删改查的时候检查此逻辑，赞和踩的时候不调用
-    }else if(ctx.params.questionId && answer.question !== ctx.params.questionId){
+    }else if(ctx.params.questionId && answer.question.toString() !== ctx.params.questionId){
       ctx.throw(404,'该答案不存在')
     }
     ctx.state.answer = answer
@@ -53,13 +53,16 @@ class answerController{
     ctx.verifyParams({
       content:{type:'string',required:true},
     })
-    await ctx.state.answer.updateOne(ctx.request.body)
-    ctx.body = ctx.state.answer
+    await Answer.findByIdAndUpdate(ctx.params.id,ctx.request.body)
+    const newAnswer = await Answer.findById(ctx.params.id)
+    ctx.body = newAnswer
   }
 
   async checkholder(ctx,next){
     const {answer} = ctx.state;
-    if(answer.holder.toString() !== ctx.state.user._id){
+    if(answer.holder.toString() !== ctx.state.user._id    
+    && ctx.state.user.role !== 'superadmin'
+    && ctx.state.user.role !== 'admin'){
       ctx.throw(403,'没有权限')
     }
     await next()

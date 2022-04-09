@@ -71,7 +71,9 @@ class questionController{
 
   async checkholder(ctx,next){
     const {question} = ctx.state;
-    if(question.holder.toString() !== user.state.user._id){
+    if(question.holder.toString() !== user.state.user._id
+    && ctx.state.user.role !== 'superadmin'
+    && ctx.state.user.role !== 'admin'){
       ctx.throw(403,'没有权限')
     }
     await next()
