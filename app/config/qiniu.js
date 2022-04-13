@@ -1,5 +1,5 @@
-const accessKey = 'I8vWDivyRnXM85nLUMuaTr3HN97lX_B4bGugbpGV';
-const secretKey = 'IzHCng7bUdhScYecf25vuaUtynjreSAlJ7PLfg2O';
+const accessKey = 'GHtgzdXyBwen6ktRdnM3TruspfORzrqpJcQdOnOj';
+const secretKey = 'ljJdPY5eSiV6nWwNkEgsNnhBqNZ3J3DqDOk8drGS';
 const bucket = 'light-hub'
 
 module.exports = {
