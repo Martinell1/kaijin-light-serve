@@ -24,7 +24,7 @@ class resourceController{
 
     async hot(ctx){
       ctx.body = await Resource.find()
-                               .sort({'voteCount':-1})
+                               .sort({'downloadCount':-1})
                                .populate('holder topics')
                                .limit(10)
     }
