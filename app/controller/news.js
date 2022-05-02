@@ -9,12 +9,15 @@ class newsController{
     let reg = new RegExp(/[A-Za-z0-9]+/)
     if(reg.test(q) && q?.length === 24){
       ctx.body = await News.find({topics:q})
+                              .sort([['_id', -1]])
                               .populate('topics')
                               .limit(perPage)
                               .skip(page * perPage)
+                              
     }else{
       q = new RegExp(q)
       ctx.body = await News.find({$or:[{title:q},{description:q},{content:q}]})
+                               .sort([['_id', -1]])
                                .populate('topics')
                                .limit(perPage)
                                .skip(page * perPage)
